@@ -1,24 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { AttendanceStateProvider } from "./features/attendance/state/AttendanceStateProvider";
+import { Attendance } from "./features/attendance/ui/Attendance";
 
 function App() {
+  const [app, setApp] = React.useState<"attendance">();
+
+  if (app) {
+    return (
+      <AttendanceStateProvider>
+        <Attendance />
+      </AttendanceStateProvider>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div
+      style={{
+        backgroundColor: "#333",
+        height: "100vh",
+        color: "#eee",
+        textAlign: "center",
+        padding: "2rem",
+      }}
+    >
+      <h1>SELECT YOUR APP</h1>
+      <ul style={{ listStyle: "none" }}>
+        <li
+          onClick={() => setApp("attendance")}
+          style={{
+            padding: "1rem",
+            background: "#222",
+            cursor: "pointer",
+            fontSize: "1.2rem",
+            color: "lightcyan",
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          Attendance App
+        </li>
+      </ul>
     </div>
   );
 }
