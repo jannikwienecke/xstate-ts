@@ -8,7 +8,7 @@ export const MachineState: React.FC<{}> = ({}) => {
   if (!state) return null;
 
   return (
-    <div>
+    <div style={{ opacity: "0.9" }}>
       <pre style={{ fontSize: "1.4rem" }}>
         {JSON.stringify(
           {

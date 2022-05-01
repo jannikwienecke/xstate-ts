@@ -6,24 +6,14 @@ import { Attendance } from "./features/attendance/ui/Attendance";
 function App() {
   const [app, setApp] = React.useState<"attendance">();
 
-  if (app) {
-    return (
-      <AttendanceStateProvider>
-        <Attendance />
-      </AttendanceStateProvider>
-    );
-  }
+  const AttendanceRoute = (
+    <AttendanceStateProvider>
+      <Attendance />
+    </AttendanceStateProvider>
+  );
 
-  return (
-    <div
-      style={{
-        backgroundColor: "#333",
-        height: "100vh",
-        color: "#eee",
-        textAlign: "center",
-        padding: "2rem",
-      }}
-    >
+  const Menu = (
+    <>
       <h1>SELECT YOUR APP</h1>
       <ul style={{ listStyle: "none" }}>
         <li
@@ -39,6 +29,20 @@ function App() {
           Attendance App
         </li>
       </ul>
+    </>
+  );
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#333",
+        height: "100vh",
+        color: "#eee",
+        textAlign: "center",
+        padding: "2rem",
+      }}
+    >
+      {app === "attendance" ? AttendanceRoute : Menu}
     </div>
   );
 }

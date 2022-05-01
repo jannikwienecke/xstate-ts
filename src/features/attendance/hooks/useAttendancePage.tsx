@@ -1,13 +1,13 @@
 import { useInterpret, useSelector } from "@xstate/react";
 import React from "react";
 import { assign, send, spawn } from "xstate";
+import { fetchAttendanceData } from "../../../api";
 import { isAttendanceData } from "../../../guards";
 import { fetchMachine } from "../../../stateMachines/fetchMachine/fetchMachine";
 import {
   hasDataSelector,
   stateRefSelector,
 } from "../../../stateMachines/fetchMachine/selectors";
-import { AttendanceContextType } from "../../../types";
 import {
   isCheckedInSelector,
   isTogglingSelector,
@@ -20,21 +20,7 @@ import { AttendanceMachineType } from "../state/types";
 export const useAttendancePage = () => {
   const attendanceMachine = useInterpret(fetchMachine, {
     services: {
-      fetchData: async (context, event) => {
-        return new Promise<AttendanceContextType>((res) => {
-          setTimeout(() => {
-            // THESE DATA WILL BE SEND TO "send_data_to_child"
-            res({
-              action: "check_in",
-              error_message: undefined,
-              timestamp: new Date().getTime() - 8000,
-              rollbackState: "",
-              startWorkingTime: new Date().getTime(),
-              workingTime: 0,
-            });
-          }, 1000);
-        });
-      },
+      fetchData: fetchAttendanceData,
     },
 
     actions: {

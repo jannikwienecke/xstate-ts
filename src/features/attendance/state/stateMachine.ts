@@ -1,11 +1,7 @@
 import { assign, createMachine, send } from "xstate";
+import { toggleAttendance } from "../../../api";
 import { isAttendanceData } from "../../../guards";
-import {
-  AttendanceContextType,
-  AttendanceTogglerResponse,
-} from "../../../types";
-
-let action: "check_in" | "check_out" = "check_in";
+import { AttendanceContextType } from "../../../types";
 
 export const fetchControllerMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QDMwBcDGALAtBg9gHZoBO+ANuWCTgLYCG2AloWAHRr5RTktQCCaNGEIR6hDGADEEIuxYA3fAGt2qTLgLEylanUZYW7Tt16EBQkWIlgEi-BnpomRANoAGALqJQAB3ywTM5EPiAAHogATJEAHGwALACsiQCMAJzuAGxpmZkA7AUAzAA0IACeiIWZCemJMe6pWZEZhQC+raXq2HhEpBRUNAzMrBxcPHyCwqLiklLUZCRsvuROyPgktGxdmr06A-rDxmNmFlPWknaESo7BhB7eSCD+gbehEQiFhfFsaTF-eZkUvFgZlmqUKggUjFEmxMok8olInlIklMu5Yu1Ouhulo+rpBgYjKNTBNLNMbFIAMIACQAopSANIAfQAkgA5ULPIIuQhvRAwwoxFKFX4xeJ5FL5BFpcGIHCFGGJNJ5GKxeqRRHxIWZTEgbY9bT9PRDQwjEzjcyTKwzaQ0+nMgDyAFUACqcgLckKPd44ZpxFXZRLuPLuNLA4OyhB5NKwqXi9HI9IpXX63F7Y2EkbYMAYVQQHD4ACuaCkLodAHFywAZWnul48vkIX3Qn6JLVpP2ZQoomKRlJI2FB9X9v4a5Ep7E7Q34g6m9jZ3OQHAsNiwLD4ADuOA3YHIBFo0jCsDQTnY9GQwhIAApCu47wBKKSp3ZGgmHNgLvPLwir9dbnd7vgB51p6vLeogKSSmwkr9okhTRoCGSZJGvopDCMTdvkkSFFCYoAvEE4aAaeL7CaRKfkuLClhW1a1o8XKvOBTZAt8iT5O4nzxF2MQZHk8QoWisIFHkXwxCJbbBoROIvjOZGsFI7Isi6TIALL8DS7J0X4HqMaAPrxJ8bCxFkKQcUKyQAih8TYWwCrBqJjT9u0HQgIQ+AQHAoTPtOpGZkcJKWmS5xgCBunhHKwrVOJkSZOK2QolqiSRsibBse4aFoQCHbwXkUlTiRGbvhR+ZFmgoUNkxOBtnE8TKjhwIFGigrJYU0HcfEoZQnByppHlxHpm+c4flgOZfiua6btuu77iF9E6RVekReibB3jE+T9l88TpLFKHRJEtlVPC7hCulW3dn1aavrO5EjYu+bjX+27rMofA4M4wFzfWXqLR87jfDFm2nRhDQpLt0QHXCIYnUCwqJBdMm+UVt1jWB2lfaj4XMTFK3Het2HAtt-HlHKzQCkiBnIoCx1ofDPmFXO5XfZjVUpbVIksY1ZkoUOtlbV2CKhj2KLOa0QA */
@@ -116,19 +112,7 @@ export const fetchControllerMachine =
     },
     {
       services: {
-        toggleAttendance: async (context, event, state) => {
-          return new Promise<AttendanceTogglerResponse>((res, rej) => {
-            window.setTimeout(() => {
-              console.log("state: ", state.data);
-              // rej({});
-              action = action === "check_in" ? "check_out" : "check_in";
-              res({
-                action,
-                error_message: undefined,
-              });
-            }, 1000);
-          });
-        },
+        toggleAttendance,
         workingTimeTimer: (context) => (cb) => {
           const interval = setInterval(() => {
             cb("tick");
@@ -175,8 +159,6 @@ export const fetchControllerMachine =
         }),
 
         handleInvalidToggleResponse: send((context) => {
-          console.log("__context: ", context);
-
           const rollbackEventName =
             context.rollbackState === "check_in" ? "CHECK_IN" : "CHECK_OUT";
 
